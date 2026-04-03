@@ -1,1 +1,25 @@
-
+<!DOCTYPE html>
+<html>
+<head><title>Seismic Auth</title></head>
+<body style="font-family:system-ui;text-align:center;padding:60px 20px;max-width:440px;margin:0 auto">
+  <div style="font-size:48px;margin-bottom:12px">✓</div>
+  <h2 style="margin:0 0 8px">Authenticated!</h2>
+  <p id="msg" style="color:#555">Copying token to clipboard…</p>
+  <script>
+    const p = new URLSearchParams(location.hash.slice(1));
+    const token = p.get('access_token');
+    const exp = parseInt(p.get('expires_in')) || 21600;
+    window.opener?.postMessage({ type:'SEISMIC_TOKEN', token, expiresIn:exp }, '*');
+    navigator.clipboard.writeText(token).then(() => {
+      document.getElementById('msg').innerHTML = '<strong>Token copied to clipboard.</strong><br>Switch back to Claude and paste it in the login field.';
+    }).catch(() => {
+      const inp = document.createElement('input');
+      inp.value = token; inp.readOnly = true;
+      inp.style.cssText = 'width:100%;padding:8px;margin-top:12px;font-size:11px;border:1px solid #ccc;border-radius:4px';
+      document.getElementById('msg').innerHTML = 'Copy this token and paste it in Claude:';
+      document.getElementById('msg').after(inp);
+      inp.select();
+    });
+  </script>
+</body>
+</html>
