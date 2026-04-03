@@ -1,0 +1,5 @@
+<script>
+  const p = new URLSearchParams(location.hash.slice(1));
+  window.opener?.postMessage({ type:'SEISMIC_TOKEN', token:p.get('access_token'), expiresIn:+p.get('expires_in') }, '*');
+  window.close();
+</script>
